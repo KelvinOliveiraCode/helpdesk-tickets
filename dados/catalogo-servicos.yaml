@@ -1,0 +1,28 @@
+# Catalogo de servicos do helpdesk: categorias, severidade padrao e equipes.
+# Gerado por tools/gerar_dados.py (seed 20260105); nao editar a mao.
+categorias:
+  - nome: "Sem rede"
+    severidade_padrao: "alta"
+    descricao: "Falta de conexao, enlace fora ou acesso a rede local"
+  - nome: "E-mail"
+    severidade_padrao: "media"
+    descricao: "Caixa de entrada, envio e filtros de mensagens"
+  - nome: "Sistema"
+    severidade_padrao: "alta"
+    descricao: "ERP, sistemas internos e integracoes"
+  - nome: "Hardware"
+    severidade_padrao: "baixa"
+    descricao: "Notebooks, monitores, impressoras e perifericos"
+  - nome: "Software"
+    severidade_padrao: "baixa"
+    descricao: "Aplicativos de bancada e licencas"
+  - nome: "Acesso"
+    severidade_padrao: "media"
+    descricao: "Senhas, permissoes e contas"
+  - nome: "Servico Caido"
+    severidade_padrao: "critica"
+    descricao: "Servico critico fora do ar"
+equipes:
+  - "Time A"
+  - "Time B"
+  - "Time C"
