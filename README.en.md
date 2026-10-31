@@ -1,122 +1,116 @@
 # helpdesk-tickets
 
-<div align="center">
-
 **English** · [Português (Brasil)](README.md)
 
-</div>
-
-[![Python 3](https://img.shields.io/badge/Python-3.x-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/) [![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?style=flat-square&logo=scikit-learn)](https://scikit-learn.org/) [![pandas](https://img.shields.io/badge/pandas-150458?style=flat-square&logo=pandas)](https://pandas.pydata.org/) [![pytest](https://img.shields.io/badge/pytest-0A9EDC?style=flat-square&logo=pytest)](https://docs.pytest.org/) [![MIT License](https://img.shields.io/badge/License-MIT-f4c430?style=flat-square)](LICENSE)
-
-### Service desk local: fila, SLA por severidade, inventario e relatorio de desempenho
-
----
+[![Python 3](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white)](#) [![PyYAML](https://img.shields.io/badge/PyYAML-only%20dep-3776AB?style=flat-square)](#) [![SQLite](https://img.shields.io/badge/SQLite-003B57?style=flat-square&logo=sqlite)](#) [![pytest](https://img.shields.io/badge/pytest-82%20tests-0A9EDC?style=flat-square&logo=pytest)](#) [![CI](https://img.shields.io/badge/CI-GitHub%20Actions-2088FF?style=flat-square&logo=githubactions)](#.github/workflows/ci.yml) [![MIT License](https://img.shields.io/badge/License-MIT-f4c430?style=flat-square)](LICENSE)
 
 ## What it is
 
-Service desk local: fila, SLA por severidade, inventario e relatorio de desempenho
+A **local IT service desk** to manage support tickets: a queue with per-severity SLAs, an asset inventory, a service catalog and a performance report. It runs on **SQLite** with YAML seed data. It is an educational IT/support lab in Python.
 
----
+## Status
 
-## Quick Start
+An educational lab, working and tested (82 tests).
 
-```bash
-# Clone and enter
-git clone https://github.com/KelvinOliveiraCode/<repo>.git
-cd <repo>
+## Features
 
-# Install dependencies
-# No requirements.txt detected
+- **Ticket queue** with severity (critical, high, medium, low) and SLA deadlines.
+- **Per-severity SLA** on two clocks: **first-response deadline** and **resolution deadline** (e.g. critical = 1h response, 4h resolution; low = 24h / 96h).
+- **Asset inventory** and **service catalog** (YAML seeds).
+- **Performance report**: SLA met, backlog, MTTR and recurring assets.
+- **CLI**: `abrir` (open), `listar`, `responder`, `resolver`, `inv`, `rel`, `srv` — all on local SQLite.
+- **Priority matrix** and ticket best practices documented in `docs/`.
 
-# Run the project
-python main.py
+## Architecture
 
-# Run tests
-pytest
+A `helpdesk` package with `fila.py` (tickets), `sla.py` (severity/deadlines), `inventario.py`, `banco.py` (SQLite), `relatorio.py` (performance), `servidor.py` and `cli.py`. YAML seeds in `dados/`.
+
+```mermaid
+flowchart LR
+    CLI[cli.py] --> B[banco.py - SQLite]
+    CLI --> F[queue - tickets]
+    CLI --> S[sla - deadlines by severity]
+    B --> R[report - performance]
+    D[dados/*.yaml - catalog, inventory, seed] --> B
 ```
 
-## How it works
+## Stack
 
-O projeto é organizado como um **pipeline modular** com etapas independentes:
+- Python ≥ 3.10
+- PyYAML ≥ 6.0 (only dependency)
+- SQLite (stdlib `sqlite3`)
+- pytest (dev)
+- CI: GitHub Actions
 
-- `helpdesk`
+## Repository layout
 
-Cada módulo tem responsabilidade única e pode ser testado ou substituído independentemente.
+```
+helpdesk-tickets/
+├── pyproject.toml · requirements.txt
+├── dados/
+│   ├── catalogo-servicos.yaml
+│   ├── chamados-semente.yaml
+│   └── inventario-semente.yaml
+├── src/helpdesk/
+│   ├── banco.py · fila.py · sla.py · inventario.py
+│   ├── modelo.py · relatorio.py · servidor.py · cli.py
+├── docs/                 # priority matrix, how to write a good ticket
+├── exemplos/             # performance report
+├── tests/                # 82 tests
+└── LICENSE               # MIT
+```
 
----
+## Prerequisites and installation
 
-## Capabilities
+Python ≥ 3.10.
 
-| Capacidade | Descrição |
-|------------|-------------|
-| Carregamento de Dados | Auto-download do TensorFlow creditcard.csv (284k transações) com cache local |
-| EDA e Visualização | Distribuição de classes, histogramas de Amount, heatmaps de correlação (matplotlib/seaborn) |
-| Pré-processamento | RobustScaler em Amount/Time, split estratificado, remoção de duplicatas |
-| Balanceamento | SMOTE oversampling (fallback: class_weight="balanced") |
-| Modelagem | LogisticRegression, RandomForest, ExtraTrees com RandomizedSearchCV (StratifiedKFold) |
-| Métricas | Accuracy, Precision, Recall, F1, ROC AUC, Specificity, Confusion Matrix |
-| Seleção | Score ponderado: Recall 40% + F1 30% + Precision 20% + Accuracy 10% |
-| Persistência | Serialização joblib para modelo, scaler e resultados completos |
+```bash
+pip install -e .
+```
 
+## How to run
 
----
+```bash
+helpdesk abrir --titulo "..." --solicitante "Nome" [--severidade alta] [--categoria ...] [--ativo ...]
+helpdesk listar
+helpdesk responder <id> --texto "..."
+helpdesk resolver <id>
+helpdesk inv
+helpdesk rel
+helpdesk srv
+```
 
+The default database is `dados/helpdesk.sqlite`; the YAML seeds are in `dados/`.
 
+## Tests and quality
 
----
+Real command (verified by the agent):
 
-## FAQ
+```bash
+python -m pytest tests/
+# 82 passed
+```
 
-<details>
-<summary><strong>What is this project?</strong></summary>
+- CI (`ci.yml`): runs the suite on windows-latest (Python 3.11).
 
-A Python study/project demonstrating core concepts.
+## Technical decisions and trade-offs
 
-</details>
+- **SLA measured on two clocks** (response and resolution): mirrors real support operations; the matrix is in `docs/matriz-de-prioridade.md`.
+- **Local SQLite + YAML seeds**: simple and self-contained; in exchange, no multi-user or central server.
+- **Deterministic report** (configurable reference time): comparable across runs.
 
-<details>
-<summary><strong>How do I run it?</strong></summary>
+## Known limitations and roadmap
 
-See [Quick Start](#quick-start) for copy-paste commands.
+- Local database; no authentication/multi-user.
+- Metrics (MTTR, backlog) depend on the loaded data.
+- No e-mail/real notification integration.
 
-</details>
+## Development process
 
-<details>
-<summary><strong>Are there tests?</strong></summary>
+An individual project by Kelvin Oliveira, built with orchestrated AI agents and reviewed by the author. The queue, the SLA model and the review are the author's.
 
-No automated tests in this repository.
+## License and author
 
-</details>
+MIT — Copyright (c) 2026 Kelvin Rebelo de Oliveira.
 
-<details>
-<summary><strong>Can I use this in production?</strong></summary>
-
-This is a **study/portfolio project**. Review and harden (auth, persistence, monitoring, etc.) before production use.
-
-</details>
-
-
-
----
-
-## Documentation
-
-- **Source Code** ,  Browse the `src/` directory for implementation details
-- **API Reference** ,  Inline docstrings + type hints
-- **Architecture Diagram** ,  See [architecture.mermaid](docs/architecture.mermaid) (if present)
-- **Changelog** ,  [CHANGELOG.md](CHANGELOG.md) (if present)
-- **Contributing** ,  [CONTRIBUTING.md](CONTRIBUTING.md) (if present)
-
-## License
-
-[MIT](LICENSE) ,  Kelvin Oliveira
-
----
-
-<div align="center">
-
-**Built with** · Python 3 + scikit-learn + pandas
-
-**Author** · [Kelvin Oliveira](https://github.com/KelvinOliveiraCode) · [Portfolio](https://kelvinoliveiracode.github.io/portfolio/)
-
-</div>
+**Author**: [Kelvin Oliveira](https://github.com/KelvinOliveiraCode) · [Portfolio](https://kelvinoliveiracode.github.io/portfolio/)
