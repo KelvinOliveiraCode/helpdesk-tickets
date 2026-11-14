@@ -17,8 +17,8 @@ An educational lab, working and tested (82 tests).
 - **Ticket queue** with severity (critical, high, medium, low) and SLA deadlines.
 - **Per-severity SLA** on two clocks: **first-response deadline** and **resolution deadline** (e.g. critical = 1h response, 4h resolution; low = 24h / 96h).
 - **Asset inventory** and **service catalog** (YAML seeds).
-- **Performance report**: SLA met, backlog, MTTR and recurring assets.
-- **CLI**: `abrir` (open), `listar`, `responder`, `resolver`, `inv`, `rel`, `srv` — all on local SQLite.
+- Performance report: SLA met, backlog, MTTR and recurring assets.
+- CLI: `abrir` (open), `listar`, `responder`, `resolver`, `inv`, `rel`, `srv`, all on local SQLite.
 - **Priority matrix** and ticket best practices documented in `docs/`.
 
 ## Architecture
@@ -44,7 +44,7 @@ flowchart LR
 
 ## Repository layout
 
-```
+```text
 helpdesk-tickets/
 ├── pyproject.toml · requirements.txt
 ├── dados/
@@ -96,7 +96,7 @@ python -m pytest tests/
 ## Technical decisions and trade-offs
 
 - **SLA measured on two clocks** (response and resolution): mirrors real support operations; the matrix is in `docs/matriz-de-prioridade.md`.
-- **Local SQLite + YAML seeds**: simple and self-contained; in exchange, no multi-user or central server.
+- Local SQLite + YAML seeds: simple and self-contained; in exchange, no multi-user or central server.
 - **Deterministic report** (configurable reference time): comparable across runs.
 
 ## Known limitations and roadmap
@@ -111,6 +111,6 @@ An individual project by Kelvin Oliveira, built with orchestrated AI agents and 
 
 ## License and author
 
-MIT — Copyright (c) 2026 Kelvin Rebelo de Oliveira.
+MIT. Copyright (c) 2026 Kelvin Rebelo de Oliveira.
 
 **Author**: [Kelvin Oliveira](https://github.com/KelvinOliveiraCode) · [Portfolio](https://kelvinoliveiracode.github.io/portfolio/)

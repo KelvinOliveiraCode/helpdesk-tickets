@@ -17,8 +17,8 @@ Laboratório educacional funcional e testado (82 testes).
 - **Fila de chamados** com severidade (crítica, alta, média, baixa) e prazos de SLA.
 - **SLA por severidade** em dois relógios: **prazo de primeira resposta** e **prazo de resolução** (ex.: crítica = resposta em 1h, resolução em 4h; baixa = 24h / 96h).
 - **Inventário de ativos** e **catálogo de serviços** (seeds YAML).
-- **Relatório de desempenho**: SLA atingido, backlog, MTTR e ativos recorrentes.
-- **CLI**: `abrir`, `listar`, `responder`, `resolver`, `inv`, `rel`, `srv` — tudo em SQLite local.
+- Relatório de desempenho: SLA atingido, backlog, MTTR e ativos recorrentes.
+- CLI: `abrir`, `listar`, `responder`, `resolver`, `inv`, `rel`, `srv`, tudo em SQLite local.
 - **Matriz de prioridade** e boas práticas de chamado documentadas em `docs/`.
 
 ## Arquitetura
@@ -44,7 +44,7 @@ flowchart LR
 
 ## Estrutura do repositório
 
-```
+```text
 helpdesk-tickets/
 ├── pyproject.toml · requirements.txt
 ├── dados/
@@ -96,7 +96,7 @@ python -m pytest tests/
 ## Decisões técnicas e trade-offs
 
 - **SLA medido em dois relógios** (resposta e resolução): reflete a operação real de suporte; a matriz está em `docs/matriz-de-prioridade.md`.
-- **SQLite local + seeds YAML**: simples e auto-contido; em troca, sem multiusuário nem servidor central.
+- SQLite local + seeds YAML: simples e auto-contido; em troca, sem multiusuário nem servidor central.
 - **Relatório determinístico** (referência de tempo configurável): comparável entre execuções.
 
 ## Limitações conhecidas e roadmap
@@ -111,6 +111,6 @@ Projeto individual de Kelvin Oliveira, construído com agentes de IA orquestrado
 
 ## Licença e autor
 
-MIT — Copyright (c) 2026 Kelvin Rebelo de Oliveira.
+MIT. Copyright (c) 2026 Kelvin Rebelo de Oliveira.
 
 **Autor**: [Kelvin Oliveira](https://github.com/KelvinOliveiraCode) · [Portfólio](https://kelvinoliveiracode.github.io/portfolio/)
